@@ -1,0 +1,98 @@
+Kode No. 1
+
+import numpy as np
+from sympy import symbols, Eq, solve
+import matplotlib.pyplot as plt
+
+a = np.array([[2, 1], [1, -1]])
+b = np.array([7, 1])
+
+try:
+    solusi_numerik = np.linalg.solve(a, b)
+    print(f"Nilai x: {solusi_numerik[0]}")
+    print(f"Nilai y: {solusi_numerik[1]}")
+except np.linalg.LinAlgError:
+    print("Matriks tidak memiliki solusi unik")
+
+x, y = symbols('x, y')
+persamaan1 = Eq(2*x + 1*y, 7)
+persamaan2 = Eq(1*x - 1*y, 1)
+solusi_simbolik = solve((persamaan1, persamaan2), (x, y))
+
+plt.figure(figsize=(6, 4))
+x_vals = np.linspace(-5, 5, 100)
+
+y1 = (7 - 2*x_vals) / 1
+y2 = 1 + x_vals
+
+plt.plot(x_vals, y1, label='2x + y = 7')
+plt.plot(x_vals, y2, label='x - y = 1')
+
+try:
+    plt.plot(solusi_numerik[0], solusi_numerik[1], 'bo',
+             markersize=8, label='Solusi Numerik')
+except NameError:
+    print("Solusi numerik tidak ditemukan.")
+
+if solusi_simbolik:
+    plt.plot(solusi_simbolik[x], solusi_simbolik[y], 'go',
+             markersize=8, label='Solusi Simbolik')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Representasi Grafis Sistem Persamaan')
+plt.grid(True)
+plt.legend()
+plt.show()
+
+
+Kode No. 2
+
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+x, y, z = sp.symbols('x y z')
+
+persamaan1 = sp.Eq(x + 2*y + z, 10)
+persamaan2 = sp.Eq(3*x - y + 2*z, 5)
+persamaan3 = sp.Eq(2*x + 3*y - z, 8)
+
+solusi = sp.solve((persamaan1, persamaan2, persamaan3), (x, y, z))
+print(solusi)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+x_range = np.arange(-10, 10, 0.1)
+y_range = np.arange(-10, 10, 0.1)
+X, Y = np.meshgrid(x_range, y_range)
+
+Z1 = 10 - X - 2*Y
+Z2 = (5 - 3*X + Y) / 2
+Z3 = -8 + 2*X + 3*Y
+
+ax.plot_surface(X, Y, Z1, alpha=0.5)
+ax.plot_surface(X, Y, Z2, alpha=0.5)
+ax.plot_surface(X, Y, Z3, alpha=0.5)
+
+if solusi:
+    nilai_x_simbolik = solusi[x]
+    nilai_y_simbolik = solusi[y]
+    nilai_z_simbolik = solusi[z]
+    print(f"Nilai x (simbolik): {nilai_x_simbolik}")
+    print(f"Nilai y (simbolik): {nilai_y_simbolik}")
+    print(f"Nilai z (simbolik): {nilai_z_simbolik}")
+    try:
+        x_plot = float(nilai_x_simbolik)
+        y_plot = float(nilai_y_simbolik)
+        z_plot = float(nilai_z_simbolik)
+        ax.scatter(x_plot, y_plot, z_plot, color='red', marker='o')
+    except TypeError as e:
+        print(f"Terjadi TypeError saat mengubah ke float: {e}")
+
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+plt.show()
